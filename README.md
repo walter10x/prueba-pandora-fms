@@ -1,90 +1,87 @@
+# 📸 Aplicación CLI para Procesamiento de Fotografías
 
----
+Aplicación de línea de comandos para procesar fotos desde la API de JSONPlaceholder, comparando rendimiento en tres modos de ejecución: secuencial, multihilos y multiprocesos.
 
-## Estructura del Proyecto
-| Archivo              | Descripción                                  |
-|----------------------|----------------------------------------------|
-| `app/cli.py`         | Interfaz CLI con validación de parámetros    |
-| `app/api_service.py` | Cliente HTTP con retries y manejo de errores |
-| `app/sequential.py`  | Procesamiento secuencial                     |
-| `app/multithreading.py` | Procesamiento concurrente con hilos       |
-| `app/multiprocessing.py` | Procesamiento paralelo con procesos      |
+## 🚀 Características principales
+- **Tres modos de procesamiento**:
+  - `secuencial`: Procesamiento lineal tradicional
+  - `multihilos`: Paralelización con hilos (threading)
+  - `multiprocesos`: Distribución en núcleos de CPU (multiprocessing)
+- **Benchmark integrado** para comparación de tiempos
+- Integración con API externa de [JSONPlaceholder](https://jsonplaceholder.typicode.com)
+- Sistema de pruebas funcionales
+- Interfaz CLI intuitiva con Typer
 
----
+## 📦 Requisitos técnicos
+- Python 3.9+
+- Dependencias:
+- requests typer
 
 
-## 🚀 Uso
-### Ejecución básica
+## ⚙️ Instalación
+1. Clonar repositorio:
 
-Modo secuencial (todas las fotos)
-python main.py --mode secuencial
+git clone https://github.com/tu-repositorio/photo-processor-cli.git
+cd prueba-pandora-fms
 
-Modo multihilos (50 fotos)
-python main.py --mode multihilos --photos 50
+2. Instalar dependencias:
+pip install -r requirements.txt
 
-Modo multiprocesos (sin límite)
-python main.py --mode multiprocesos
 
-## Resumen de la Experiencia
+## 🖥 Uso básico
+python main.py --mode [MODO] --photos [CANTIDAD]
 
-### Lógica de la Solución
-1. **CLI con Typer**:  
-   - Seleccioné Typer por su integración con type hints y autocompletado.  
-   - Parámetros `--mode` y `--photos` validados estrictamente (`--photos` es opcional).
 
-2. **Concurrencia**:  
-   - **Multihilos**: Usé `ThreadPoolExecutor` para optimizar operaciones I/O (peticiones HTTP).  
-   - **Multiprocesos**: Implementé `ProcessPoolExecutor` para paralelismo real en CPU.
+**Parámetros**:
+- `--mode`: Modo de ejecución (`secuencial`, `multihilos`, `multiprocesos`)
+- `--photos`: Número de fotos a procesar (opcional)
 
-3. **Manejo de Errores**:  
-   - Retries automáticos (3 intentos) en peticiones HTTP.  
-   - Logging en consola y archivo (`app.log`).
-
-### Problemas y Soluciones
-| Problema                          | Solución                                  |
-|-----------------------------------|-------------------------------------------|
-| **Orden en multihilos**           | Lista pre-inicializada con índices.       |
-| **Errores HTTP 429**              | Límite de 20 hilos concurrentes.          |
-| **Serialización en multiprocesos**| Funciones a nivel de módulo.              |
-
-### ¿Cuándo Usar Cada Modo?
-| Modo           | Caso de Uso Ideal                          |
-|----------------|--------------------------------------------|
-| **Secuencial** | Debugging o pruebas con pocos datos.       |
-| **Multihilos** | Operaciones I/O (APIs, redes, archivos).   |
-| **Multiprocesos** | Cálculos intensivos en CPU (procesamiento local). |
-
----
-
-## Comparativa de Rendimiento
-Ejecutando 100 fotos (resultados de referencia):
+**Ejemplo**:
+python main.py --mode multiprocesos --photos 50
 
 
 
+## ⏱ Benchmark de rendimiento
+Ejecutar comparativa completa:
+python benchmark.py
 
----
+**Salida típica**:
 
-## Puntos Extra Implementados
-1. **Manejo de Errores**:  
-   - Retries automáticos en peticiones HTTP.  
-   - Mensajes de error en rojo en la CLI.  
+🔎 Resultados de rendimiento:
+Modo | Tiempo (s)
+secuencial | 15.200
+multihilos | 8.350
+multiprocesos | 4.600
 
-2. **Logging Dual**:  
-   - Registro en consola y archivo `app.log`.  
 
-3. **Benchmark Automático**:  
-   - Script `benchmark.py` para comparar tiempos.  
+## 🧠 Arquitectura
 
----
+prueba-pandora-fms/
+├── main.py # Interfaz CLI principal
+├── api_service.py # Cliente de la API
+│ ├── sequential.py
+│ ├── multithreading.py
+│ └── multiprocessing.py
+├── benchmark.py # Script de comparativa
+└── test_api.py # Pruebas de conexión
 
-## Criterios de Evaluación Cumplidos
-✅ **CLI funcional** con parámetros validados.  
-✅ **Tres modos de ejecución** implementados.  
-✅ **Límite de fotos** opcional.  
-✅ **Documentación completa** en README.md.  
-✅ **Resumen técnico** con decisiones y problemas.  
 
----
+## 🔍 Pruebas de API
+Verificar conectividad:
+python test_api.py
 
-**¡Listo para revisión técnica!** 🚀  
+**Salida esperada**:
 
+✅ Conexión exitosa con la API
+📸 Foto ID: 1 | Título: accusamus beatae ad facilis cum similique...
+
+
+## 📚 Integración con API
+Flujo de datos:
+1. Obtener fotos de `/photos`
+2. Recuperar metadatos de álbumes desde `/albums`
+3. Combinar datos relacionados
+4. Procesar según modo seleccionado
+
+## 📄 Licencia
+MIT License - Libre para uso y modificación
